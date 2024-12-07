@@ -1,0 +1,142 @@
+-- 1. 用户表 (user)
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    avatar_url VARCHAR(255),
+    bio TEXT,
+    role ENUM('enthusiast', 'coser', 'post_production', 'photographer', 'makeup_artist', 'organizer') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. coser作品表 (coser_works)
+CREATE TABLE coser_works (
+    work_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    title VARCHAR(255) NOT NULL,
+    original_work VARCHAR(255),
+    character_name VARCHAR(255),
+    content TEXT,
+    image_url VARCHAR(255),
+    publish_date TIMESTAMP,
+    read_count INT DEFAULT 0,
+    photographer_id INT,
+    makeup_artist_id INT,
+    post_production_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (photographer_id) REFERENCES users(user_id),
+    FOREIGN KEY (makeup_artist_id) REFERENCES users(user_id),
+    FOREIGN KEY (post_production_id) REFERENCES users(user_id)
+);
+
+-- 3. 主办方信息表 (organizer_info)
+CREATE TABLE organizer_info (
+    organizer_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE,  -- 确保每个 user_id 对应唯一的 organizer_id
+    name VARCHAR(255) NOT NULL,
+    headquarters_city VARCHAR(255),
+    description TEXT,
+    logo_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+-- 4. 主办方信息发布表 (organizer_info_posts)
+CREATE TABLE organizer_info_posts (
+    post_id INT AUTO_INCREMENT PRIMARY KEY,
+    organizer_id INT,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    main_image_url VARCHAR(255),
+    detail_images TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (organizer_id) REFERENCES organizer_info(organizer_id)
+);
+
+-- 5. 摄影作品表 (photography_works)
+CREATE TABLE photography_works (
+    work_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    image_url VARCHAR(255) NOT NULL,
+    description TEXT,
+    publish_date TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+-- 6. 社团表 (societies)
+CREATE TABLE societies (
+    society_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    founder_id INT,
+    main_city VARCHAR(255),
+    description TEXT,
+    logo_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (founder_id) REFERENCES users(user_id)
+);
+
+-- 7. 社团成员表 (society_members)
+CREATE TABLE society_members (
+    member_id INT AUTO_INCREMENT PRIMARY KEY,
+    society_id INT,
+    user_id INT,
+    role ENUM('member', 'admin', 'leader') NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (society_id) REFERENCES societies(society_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+-- 8. 社团信息发布表 (society_info_posts)
+CREATE TABLE society_info_posts (
+    post_id INT AUTO_INCREMENT PRIMARY KEY,
+    society_id INT,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    main_image_url VARCHAR(255),
+    detail_images TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (society_id) REFERENCES societies(society_id)
+);
+
+-- 9. 求助表 (help_requests)
+CREATE TABLE help_requests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    title VARCHAR(255) NOT NULL,
+    event_date DATE,
+    duration INT,
+    image_url VARCHAR(255),
+    description TEXT,
+    phone VARCHAR(20),
+    contact VARCHAR(255),
+    fee DECIMAL(10, 2),
+    city VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+-- 10. 评论表 (comments for coser works)
+CREATE TABLE comments (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    work_id INT,
+    user_id INT,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (work_id) REFERENCES coser_works(work_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+-- 11. 摄影作品评论表 (comments for photography)
+CREATE TABLE comments_for_photography (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    work_id INT,
+    user_id INT,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (work_id) REFERENCES photography_works(work_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
