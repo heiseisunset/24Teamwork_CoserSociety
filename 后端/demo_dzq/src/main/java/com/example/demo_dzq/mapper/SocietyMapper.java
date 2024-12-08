@@ -12,4 +12,7 @@ public interface SocietyMapper {
     // 查询所有社团信息
     @Select("SELECT * FROM societies")
     List<Society> findAllSocieties();
+
+    @Select("SELECT * FROM societies WHERE society_id = #{societyId}")
+    Society findSocietyById(Integer societyId);
 }
