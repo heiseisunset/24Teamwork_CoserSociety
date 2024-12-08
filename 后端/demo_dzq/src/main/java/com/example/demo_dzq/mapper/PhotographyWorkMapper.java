@@ -28,4 +28,7 @@ public interface PhotographyWorkMapper {
     // 删除指定workId的摄影作品
     @Delete("DELETE FROM photography_works WHERE work_id = #{workId}")
     int deletePhotographyWork(Integer workId);
+
+    @Select("SELECT * FROM photography_works WHERE work_id = #{workId}")
+    PhotographyWork getPhotographyWorkById(Integer workId);
 }

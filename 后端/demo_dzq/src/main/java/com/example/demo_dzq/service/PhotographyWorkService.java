@@ -1,5 +1,6 @@
 package com.example.demo_dzq.service;
 
+import com.example.demo_dzq.pojo.PhotographyComments;
 import com.example.demo_dzq.pojo.PhotographyWork;
 
 import java.util.List;
@@ -14,4 +15,9 @@ public interface PhotographyWorkService {
     List<PhotographyWork> getPhotographyWorksByUserId(Integer userId);
 
     boolean deletePhotographyWork(Integer workId); // 删除作品的方法
+
+    PhotographyWork getPhotographyWorkById(Integer workId);
+
+    // 添加保存评论的方法
+    boolean addPhotographyComment(PhotographyComments comment);
 }
