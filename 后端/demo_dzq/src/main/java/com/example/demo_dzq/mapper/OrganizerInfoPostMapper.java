@@ -24,4 +24,8 @@ public interface OrganizerInfoPostMapper {
     @Select("SELECT * FROM organizer_info_posts")
     List<OrganizerInfoPost> findAllOrganizerInfoPosts();
 
+    // 根据postId查询单个主办方发布信息
+    @Select("SELECT * FROM organizer_info_posts WHERE post_id = #{postId}")
+    OrganizerInfoPost findByPostId(Integer postId);
+
 }

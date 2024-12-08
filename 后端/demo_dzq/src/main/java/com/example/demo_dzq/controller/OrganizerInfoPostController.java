@@ -1,7 +1,9 @@
 package com.example.demo_dzq.controller;
 
+import com.example.demo_dzq.dto.OrganizerInfoPostDetailDTO;
 import com.example.demo_dzq.dto.OrganizerPostDTO;
 import com.example.demo_dzq.pojo.OrganizerInfoPost;
+import com.example.demo_dzq.service.OrganizerInfoPostDetailService;
 import com.example.demo_dzq.service.OrganizerInfoPostService;
 import com.example.demo_dzq.common.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class OrganizerInfoPostController {
 
     @Autowired
     private OrganizerInfoPostService organizerInfoPostService;
+
+    @Autowired
+    private OrganizerInfoPostDetailService organizerInfoPostDetailService;
 
     // 创建主办方发布信息
     @PostMapping("/create")
@@ -38,5 +43,20 @@ public class OrganizerInfoPostController {
         } catch (Exception e) {
             return new Response<>(500, "Error occurred: " + e.getMessage(), null);
         }
+    }
+
+    //主办方信息详情页
+    @GetMapping("/details")
+    public Response<OrganizerInfoPostDetailDTO> getOrganizerInfoPostDetails(@RequestParam Integer postId) {
+        // 获取主办方发布信息的详细内容
+        OrganizerInfoPostDetailDTO dto = organizerInfoPostDetailService.getOrganizerPostDetails(postId);
+
+        // 如果没有找到对应的发布信息，返回错误响应
+        if (dto == null || dto.getOrganizerInfoPost() == null) {
+            return new Response<>(404, "Organizer post not found", null);
+        }
+
+        // 找到相关信息，返回成功的响应
+        return new Response<>(200, "Success", dto);
     }
 }
