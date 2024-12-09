@@ -11,9 +11,10 @@ import java.util.List;
 @Repository
 public interface PhotographyWorkMapper {
 
-    @Insert("INSERT INTO photography_works (user_id, image_url, description, publish_date, created_at) " +
-            "VALUES (#{userId}, #{imageUrl}, #{description}, #{publishDate}, #{createdAt})")
+    @Insert("INSERT INTO photography_works (user_id, image_url, description, publish_date, created_at, readaccount) " +
+            "VALUES (#{userId}, #{imageUrl}, #{description}, #{publishDate}, #{createdAt}, #{readaccount})")
     int insertPhotographyWork(PhotographyWork photographyWork);
+
 
     @Select("SELECT LAST_INSERT_ID()")
     int getLastInsertId(); // 获取插入的最新ID

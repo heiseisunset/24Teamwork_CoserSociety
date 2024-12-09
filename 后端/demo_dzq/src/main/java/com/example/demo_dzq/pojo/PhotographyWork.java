@@ -9,6 +9,7 @@ public class PhotographyWork {
     private String description;
     private LocalDateTime publishDate;
     private LocalDateTime createdAt;
+    private Integer readaccount; // 新增字段
 
     // Getter 和 Setter
     public Integer getWorkId() {
@@ -57,5 +58,13 @@ public class PhotographyWork {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getReadaccount() {
+        return readaccount;
+    }
+
+    public void setReadaccount(Integer readaccount) {
+        this.readaccount = readaccount;
     }
 }
