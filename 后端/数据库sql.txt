@@ -53,6 +53,8 @@ CREATE TABLE organizer_info_posts (
     main_image_url VARCHAR(255),
     detail_images TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    location TEXT,
+    event_time TEXT,
     FOREIGN KEY (organizer_id) REFERENCES organizer_info(organizer_id)
 );
 
