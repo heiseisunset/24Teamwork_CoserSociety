@@ -11,6 +11,8 @@ public class OrganizerInfoPost {
     private String mainImageUrl;  // 主图的URL
     private String detailImages;  // 详情图的URL列表
     private Timestamp createdAt;  // 创建时间
+    private String location;  // 活动地点
+    private String eventTime;  // 活动时间
 
     // Getter 和 Setter 方法
 
@@ -68,5 +70,21 @@ public class OrganizerInfoPost {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(String eventTime) {
+        this.eventTime = eventTime;
     }
 }

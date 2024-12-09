@@ -12,8 +12,8 @@ import java.util.List;
 public interface OrganizerInfoPostMapper {
 
     // 插入主办方发布信息
-    @Insert("INSERT INTO organizer_info_posts (organizer_id, title, content, main_image_url, detail_images, created_at) " +
-            "VALUES (#{organizerId}, #{title}, #{content}, #{mainImageUrl}, #{detailImages}, #{createdAt})")
+    @Insert("INSERT INTO organizer_info_posts (organizer_id, title, content, main_image_url, detail_images, location, event_time, created_at) " +
+            "VALUES (#{organizerId}, #{title}, #{content}, #{mainImageUrl}, #{detailImages}, #{location}, #{eventTime}, #{createdAt})")
     void insertOrganizerInfoPost(OrganizerInfoPost organizerInfoPost);
 
     // 根据主办方ID查询所有发布信息

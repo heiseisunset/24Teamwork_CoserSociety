@@ -40,6 +40,11 @@ public class OrganizerInfoPostServiceImpl implements OrganizerInfoPostService {
         organizerInfoPost.setContent(organizerPostDTO.getContent());
         organizerInfoPost.setMainImageUrl(organizerPostDTO.getMainImageUrl());
 
+
+        // 设置地点和活动时间
+        organizerInfoPost.setLocation(organizerPostDTO.getLocation());
+        organizerInfoPost.setEventTime(organizerPostDTO.getEventTime());
+
         // 将 detailImages 列表转换为字符串，用逗号分隔
         String detailImages = String.join(",", organizerPostDTO.getDetailImages());
         organizerInfoPost.setDetailImages(detailImages);

@@ -8,6 +8,8 @@ public class OrganizerPostDTO {
     private String content;
     private String mainImageUrl;
     private List<String> detailImages;
+    private String location;  // 发布地点
+    private String eventTime;  // 活动时间
 
     // Getter 和 Setter
     public Integer getUserId() {
@@ -48,5 +50,21 @@ public class OrganizerPostDTO {
 
     public void setDetailImages(List<String> detailImages) {
         this.detailImages = detailImages;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(String eventTime) {
+        this.eventTime = eventTime;
     }
 }
