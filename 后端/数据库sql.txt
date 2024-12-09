@@ -140,3 +140,14 @@ CREATE TABLE comments_for_photography (
     FOREIGN KEY (work_id) REFERENCES photography_works(work_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
+-- 12.主办方信息评论表 (comments for organizer_info_posts)
+CREATE TABLE comments_for_organizer_info_posts (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,  -- 评论ID，自增长
+    post_id INT,  -- 发布信息ID，外键，指向主办方信息发布表
+    user_id INT,  -- 评论者用户ID，外键，指向用户表
+    content TEXT,  -- 评论内容
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 评论时间，默认当前时间
+    FOREIGN KEY (post_id) REFERENCES organizer_info_posts(post_id),  -- 外键关联发布信息ID
+    FOREIGN KEY (user_id) REFERENCES user(user_id)  -- 外键关联用户ID
+);
