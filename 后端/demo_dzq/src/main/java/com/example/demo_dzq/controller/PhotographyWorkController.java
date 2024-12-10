@@ -10,7 +10,11 @@ import com.example.demo_dzq.service.PhotographyWorkService;
 import com.example.demo_dzq.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +35,44 @@ public class PhotographyWorkController {
 
     // 创建摄影作品
     @PostMapping("/post")
-    public Response<PhotographyWorkResponseDTO> addPhotographyWork(@RequestBody PhotographyWork photographyWork) {
-        // 设置作品的创建时间和发布时间
-        photographyWork.setCreatedAt(LocalDateTime.now());
-        if (photographyWork.getPublishDate() == null) {
-            photographyWork.setPublishDate(LocalDateTime.now());  // 默认发布为当前时间
-        }
+    public Response<PhotographyWorkResponseDTO> addPhotographyWork(
+            @RequestParam("file") MultipartFile file,  // 上传图片文件
+            @RequestParam("userId") Integer userId,
+            @RequestParam("description") String description) {
 
         try {
+            // 确保目录存在
+            Path uploadDir = Paths.get("D:/icosImage");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir); // 创建目录
+            }
+
+            // 获取文件扩展名
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = originalFileName != null ? originalFileName.substring(originalFileName.lastIndexOf(".")) : ".jpg";
+
+            // 生成唯一的文件名，避免文件名冲突
+            String newFileName = System.currentTimeMillis() + fileExtension;
+
+            // 目标路径
+            Path targetPath = uploadDir.resolve(newFileName);
+
+            // 保存文件到磁盘
+            file.transferTo(targetPath);
+
+            // 构造文件的访问URL (假设你的应用能够通过 HTTP 访问 D:/icosImage)
+            String imageUrl = "D:/icosImage/" + newFileName; // 根据你项目的实际访问路径调整
+
+            PhotographyWork photographyWork = new PhotographyWork();
+            photographyWork.setUserId(userId);
+            photographyWork.setDescription(description);
+            photographyWork.setReadaccount(0);
+            // 设置作品的创建时间和发布时间
+            photographyWork.setCreatedAt(LocalDateTime.now());
+            if (photographyWork.getPublishDate() == null) {
+                photographyWork.setPublishDate(LocalDateTime.now());  // 默认发布为当前时间
+            }
+            photographyWork.setImageUrl(imageUrl);
             int workId = photographyWorkService.addPhotographyWork(photographyWork);
             // 创建返回的 DTO 对象
             PhotographyWorkResponseDTO responseDTO = new PhotographyWorkResponseDTO(workId);
