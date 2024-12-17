@@ -77,16 +77,9 @@ public class PhotographyWorkController {
             // 创建返回的 DTO 对象
             PhotographyWorkResponseDTO responseDTO = new PhotographyWorkResponseDTO(workId);
             return new Response<>(200, "作品发布成功", responseDTO);
-        }
-       /* catch (Exception e) {
+        } catch (Exception e) {
             return new Response<>(500, "作品发布失败", null);
-        }*/
-        catch (Exception e) {
-            String errorMessage = "作品发布失败: " + e.getMessage();
-            return new Response<>(500, errorMessage, null);
         }
-
-
     }
 
     // 获取当前登录用户发布的所有摄影作品
