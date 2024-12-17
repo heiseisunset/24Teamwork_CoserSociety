@@ -15,25 +15,14 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-//    // 获取指定作品的所有评论
-//    @GetMapping("/work/{workId}")
-//    public Response<List<Comment>> getCommentsByWorkId(@PathVariable Integer workId) {
-//        try {
-//            List<Comment> comments = commentService.findCommentsByWorkId(workId);
-//            return new Response<>(200, "Comments retrieved successfully", comments);
-//        } catch (Exception e) {
-//            return new Response<>(500, "Error occurred: " + e.getMessage(), null);
-//        }
-//    }
-
+    // 添加评论
     @PostMapping("/add")
     public Response<String> addComment(@RequestBody Comment comment) {
         try {
             commentService.addComment(comment);
             return new Response<>(200, "Comment added successfully", null);
         } catch (Exception e) {
-            // 打印异常详细信息到日志
-            e.printStackTrace(); // 记录详细的异常信息
+            e.printStackTrace();
             return new Response<>(500, "Error occurred: " + e.getMessage(), null);
         }
     }
@@ -42,13 +31,13 @@ public class CommentController {
     @GetMapping("/get")
     public Response<List<Comment>> getCommentsByWorkId(@RequestParam Integer workId) {
         try {
-            // 查询该作品的所有评论
             List<Comment> comments = commentService.findCommentsByWorkId(workId);
             if (comments.isEmpty()) {
                 return new Response<>(404, "No comments found for the work", null);
             }
             return new Response<>(200, "Comments retrieved successfully", comments);
         } catch (Exception e) {
+            e.printStackTrace();
             return new Response<>(500, "Error occurred: " + e.getMessage(), null);
         }
     }
