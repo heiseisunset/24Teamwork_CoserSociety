@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/24Teamwork_CoserSociety.iml" filepath="$PROJECT_DIR$/.idea/24Teamwork_CoserSociety.iml" />
-      <module fileurl="file://$PROJECT_DIR$/后端/demo_dzq/demo_dzq.iml" filepath="$PROJECT_DIR$/后端/demo_dzq/demo_dzq.iml" />
-    </modules>
-  </component>
-</project>
