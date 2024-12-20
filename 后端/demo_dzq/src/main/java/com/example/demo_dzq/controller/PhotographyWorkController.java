@@ -189,6 +189,7 @@ public class PhotographyWorkController {
                         "workId", comment.getWorkId(),
                         "content", comment.getContent(),
                         "createTime", comment.getCreateTime(),  // 你可以通过相应的方式设置创建时间
+                        "formattedCreateTime",comment.getFormattedCreateTime(),
                         "user", Map.of(
                                 "userId", user.getUserId(),
                                 "username", user.getUsername(),
