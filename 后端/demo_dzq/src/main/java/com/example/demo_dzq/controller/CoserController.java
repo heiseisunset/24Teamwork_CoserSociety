@@ -164,6 +164,16 @@ public class CoserController {
                 return new Response<>(404, "Coser work not found", null);
             }
 
+            User photographer = userService.getUserById(coserWork.getPhotographerId());
+            coserWork.setPhotographer(photographer.getUsername());
+
+
+            User makeupArtist = userService.getUserById(coserWork.getMakeupArtistId());
+            coserWork.setMakeupArtist(makeupArtist.getUsername());
+
+            User postProduction = userService.getUserById(coserWork.getPostProductionId());
+            coserWork.setPostProduction(postProduction.getUsername());
+
             // 查询评论信息
             List<Comment> comments = commentService.findCommentsByWorkId(workId);
 
