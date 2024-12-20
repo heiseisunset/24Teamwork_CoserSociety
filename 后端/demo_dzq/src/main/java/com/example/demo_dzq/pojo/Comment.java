@@ -7,6 +7,7 @@ public class Comment {
     private Integer userId; // 用户ID
     private Integer workId; // 作品ID
     private String content; // 评论内容
+    private String formattedCreateTime; // 格式化后的时间
     private Date createTime; // 评论时间
     // 新增的用户字段
     private User user;  // 存储评论用户的信息
@@ -69,5 +70,13 @@ public class Comment {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getFormattedCreateTime() {
+        return formattedCreateTime;
+    }
+
+    public void setFormattedCreateTime(String formattedCreateTime) {
+        this.formattedCreateTime = formattedCreateTime;
     }
 }
