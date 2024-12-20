@@ -166,11 +166,8 @@ public class CoserController {
 
             User photographer = userService.getUserById(coserWork.getPhotographerId());
             coserWork.setPhotographer(photographer.getUsername());
-
-
             User makeupArtist = userService.getUserById(coserWork.getMakeupArtistId());
             coserWork.setMakeupArtist(makeupArtist.getUsername());
-
             User postProduction = userService.getUserById(coserWork.getPostProductionId());
             coserWork.setPostProduction(postProduction.getUsername());
 

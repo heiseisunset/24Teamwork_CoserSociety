@@ -14,8 +14,32 @@ public interface CommentMapper {
             "VALUES (#{workId}, #{userId}, #{content}, #{createTime})")
     void insertComment(Comment comment);
 
-    // 根据作品ID获取所有评论
-    @Select("SELECT * FROM comments WHERE work_id = #{workId}")
+//    // 根据作品ID获取所有评论
+//    @Select("SELECT * FROM comments WHERE work_id = #{workId}")
+//    List<Comment> findCommentsByWorkId(Integer workId);
+
+    // 根据作品ID获取所有评论和用户信息
+    @Select("""
+        SELECT c.*, u.user_id AS userId, u.username AS username, u.email AS email, 
+               u.phone AS phone, u.avatar_url AS avatarUrl, u.bio AS bio, u.role AS role
+        FROM comments c
+        JOIN user u ON c.user_id = u.user_id
+        WHERE c.work_id = #{workId}
+    """)
+    @Results({
+            @Result(property = "id", column = "comment_id"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "workId", column = "work_id"),
+            @Result(property = "content", column = "content"),
+            @Result(property = "createTime", column = "created_at"),
+            @Result(property = "user.userId", column = "user_id"),
+            @Result(property = "user.username", column = "username"),
+            @Result(property = "user.email", column = "email"),
+            @Result(property = "user.phone", column = "phone"),
+            @Result(property = "user.avatarUrl", column = "avatar_url"),
+            @Result(property = "user.bio", column = "bio"),
+            @Result(property = "user.role", column = "role")
+    })
     List<Comment> findCommentsByWorkId(Integer workId);
 
     // 删除评论
