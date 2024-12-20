@@ -85,25 +85,59 @@ public class CoserController {
             return new Response<>(200, "Coser work published successfully", null);
         } catch (IOException e) {
             return new Response<>(500, "Error occurred while uploading file: " + e.getMessage(), null);
-        } catch (Exception e) {
-            return new Response<>(500, "Error occurred: " + e.getMessage(), null);
+        }
+        catch (Exception e) {
+            String errorMessage = "作品发布失败: " + e.getMessage();
+            return new Response<>(500, errorMessage, null);
         }
     }
 
     // 获取当前登录用户的所有Coser作品
     @GetMapping("/user")
-    public Response<List<CoserWork>> getCoserWorksByUserId(@RequestParam  Integer userId) {
+    public Response<List<CoserWork>> getCoserWorksByUserId(@RequestParam Integer userId) {
         try {
-            // 从数据库查询当前用户ID对应的所有Coser作品
+            // 获取用户信息
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                return new Response<>(404, "User not found", null);
+            }
+
+            // 查询用户的所有 Coser 作品
             List<CoserWork> coserWorks = coserWorkService.getCoserWorksByUserId(userId);
 
-            // 返回成功的Response
+            // 填充用户相关的用户名字段
+            for (CoserWork work : coserWorks) {
+                // 查询摄影师的用户名
+                if (work.getPhotographerId() != null) {
+                    User photographer = userService.getUserById(work.getPhotographerId());
+                    if (photographer != null) {
+                        work.setPhotographer(photographer.getUsername());
+                    }
+                }
+
+                // 查询化妆师的用户名
+                if (work.getMakeupArtistId() != null) {
+                    User makeupArtist = userService.getUserById(work.getMakeupArtistId());
+                    if (makeupArtist != null) {
+                        work.setMakeupArtist(makeupArtist.getUsername());
+                    }
+                }
+
+                // 查询后期制作的用户名
+                if (work.getPostProductionId() != null) {
+                    User postProduction = userService.getUserById(work.getPostProductionId());
+                    if (postProduction != null) {
+                        work.setPostProduction(postProduction.getUsername());
+                    }
+                }
+            }
+
             return new Response<>(200, "Coser works retrieved successfully", coserWorks);
         } catch (Exception e) {
-            // 返回失败的Response
             return new Response<>(500, "Error occurred: " + e.getMessage(), null);
         }
     }
+
 
     @DeleteMapping("/work")
     public Response<String> deleteCoserWork(@RequestParam Integer workId) {
