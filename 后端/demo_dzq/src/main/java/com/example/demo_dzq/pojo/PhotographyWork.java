@@ -10,6 +10,7 @@ public class PhotographyWork {
     private LocalDateTime publishDate;
     private LocalDateTime createdAt;
     private Integer readaccount; // 新增字段
+    private String formattedCreateTime; // 格式化后的时间
 
     // Getter 和 Setter
     public Integer getWorkId() {
@@ -66,5 +67,13 @@ public class PhotographyWork {
 
     public void setReadaccount(Integer readaccount) {
         this.readaccount = readaccount;
+    }
+
+    public String getFormattedCreateTime() {
+        return formattedCreateTime;
+    }
+
+    public void setFormattedCreateTime(String formattedCreateTime) {
+        this.formattedCreateTime = formattedCreateTime;
     }
 }

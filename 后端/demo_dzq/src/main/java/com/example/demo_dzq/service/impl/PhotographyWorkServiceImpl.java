@@ -8,9 +8,10 @@ import com.example.demo_dzq.service.PhotographyWorkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.time.format.DateTimeFormatter;
 @Service
 public class PhotographyWorkServiceImpl implements PhotographyWorkService {
 
@@ -19,6 +20,17 @@ public class PhotographyWorkServiceImpl implements PhotographyWorkService {
 
     @Autowired
     private PhotographyCommentsMapper photographyCommentsMapper; // 注入评论 Mapper
+
+
+  // 格式化日期为 "yyyy-MM-dd"
+    private String formatCreateTime(LocalDateTime createTime) {
+        if (createTime == null) {
+            return null;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return createTime.format(formatter);
+    }
+
 
     @Override
     public int addPhotographyWork(PhotographyWork photographyWork) {
@@ -46,7 +58,15 @@ public class PhotographyWorkServiceImpl implements PhotographyWorkService {
 
     @Override
     public PhotographyWork getPhotographyWorkById(Integer workId) {
-        return photographyWorkMapper.getPhotographyWorkById(workId);
+        PhotographyWork work = photographyWorkMapper.getPhotographyWorkById(workId);
+
+        // 格式化日期
+        if (work != null && work.getCreatedAt() != null) {
+            String formattedDate = formatCreateTime(work.getCreatedAt());
+            work.setFormattedCreateTime(formattedDate);
+        }
+
+        return work;
     }
 
     @Override

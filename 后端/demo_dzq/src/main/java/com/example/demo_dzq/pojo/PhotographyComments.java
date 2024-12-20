@@ -8,6 +8,8 @@ public class PhotographyComments {
     private Integer userId;
     private String content;
     private LocalDateTime createdAt;
+    private String formattedCreateTime; // 格式化后的时间
+
 
     // Getter and Setter for commentId
     public Integer getCommentId() {
@@ -62,5 +64,13 @@ public class PhotographyComments {
     // Add getCreateTime() method for createdAt
     public LocalDateTime getCreateTime() {
         return createdAt;
+    }
+
+    public String getFormattedCreateTime() {
+        return formattedCreateTime;
+    }
+
+    public void setFormattedCreateTime(String formattedCreateTime) {
+        this.formattedCreateTime = formattedCreateTime;
     }
 }
