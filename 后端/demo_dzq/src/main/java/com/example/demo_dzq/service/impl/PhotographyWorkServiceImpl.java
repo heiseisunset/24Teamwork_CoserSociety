@@ -46,7 +46,16 @@ public class PhotographyWorkServiceImpl implements PhotographyWorkService {
     @Override
     public List<PhotographyWork> getPhotographyWorksByUserId(Integer userId) {
         // 调用数据库方法获取该用户所有作品
-        return photographyWorkMapper.selectPhotographyWorksByUserId(userId);
+        List<PhotographyWork> works = photographyWorkMapper.selectPhotographyWorksByUserId(userId);
+
+        // 格式化日期
+        for (PhotographyWork work : works) {
+            if (work != null && work.getCreatedAt() != null) {
+                String formattedDate = formatCreateTime(work.getCreatedAt());
+                work.setFormattedCreateTime(formattedDate);
+            }
+        }
+        return works;
     }
 
     @Override
