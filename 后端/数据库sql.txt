@@ -32,6 +32,10 @@ CREATE TABLE coser_works (
     FOREIGN KEY (post_production_id) REFERENCES users(user_id)
 );
 
+增加”类别”字段：
+ALTER TABLE coser_works
+ADD COLUMN category VARCHAR(100) NOT NULL AFTER created_at;
+
 -- 3. 主办方信息表 (organizer_info)
 CREATE TABLE organizer_info (
     organizer_id INT AUTO_INCREMENT PRIMARY KEY,

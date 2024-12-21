@@ -45,7 +45,7 @@ public class CoserWorkServiceImpl implements CoserWorkService {
         // 设置发布日期和创建时间
         coserWork.setPublishDate(Timestamp.valueOf(LocalDateTime.now()));
         coserWork.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-
+        coserWork.setCategory("coserWork");
         // 初始化 readCount 为 0
         coserWork.setReadCount(0);
 

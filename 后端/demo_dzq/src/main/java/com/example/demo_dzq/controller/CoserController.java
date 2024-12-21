@@ -77,7 +77,7 @@ public class CoserController {
             coserWork.setPhotographer(photographer);
             coserWork.setMakeupArtist(makeupArtist);
             coserWork.setPostProduction(postProduction);
-
+            coserWork.setCategory("coserWork");
             // 发布Coser作品
             coserWorkService.publishCoserWork(coserWork);
 

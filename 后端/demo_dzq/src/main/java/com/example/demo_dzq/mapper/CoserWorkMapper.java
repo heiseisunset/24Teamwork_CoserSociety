@@ -12,9 +12,10 @@ import java.util.List;
 public interface CoserWorkMapper {
 
     // 插入 Coser 作品
-    @Insert("INSERT INTO coser_works (user_id, title, original_work, character_name, content, image_url, publish_date, read_count, photographer_id, makeup_artist_id, post_production_id, created_at) " +
-            "VALUES (#{userId}, #{title}, #{originalWork}, #{characterName}, #{content}, #{imageUrl}, #{publishDate}, #{readCount}, #{photographerId}, #{makeupArtistId}, #{postProductionId}, #{createdAt})")
+    @Insert("INSERT INTO coser_works (user_id, title, original_work, character_name, content, image_url, publish_date, read_count, photographer_id, makeup_artist_id, post_production_id, created_at, category) " +
+            "VALUES (#{userId}, #{title}, #{originalWork}, #{characterName}, #{content}, #{imageUrl}, #{publishDate}, #{readCount}, #{photographerId}, #{makeupArtistId}, #{postProductionId}, #{createdAt}, #{category})")
     void insertCoserWork(CoserWork coserWork);
+
 
     @Select("SELECT * FROM coser_works")
     List<CoserWork> selectAllCoserWorks();

@@ -17,7 +17,7 @@ public class CoserWork {
     private Integer makeupArtistId;       // 化妆师用户ID
     private Integer postProductionId;     // 后期制作用户ID
     private Timestamp createdAt;          // 创建时间
-
+    private String category;               // 新增字段：作品类别
     // 新增字段，接收前端传递的用户名
     private String photographer;           // 摄影师用户名
     private String makeupArtist;           // 化妆师用户名
@@ -151,5 +151,13 @@ public class CoserWork {
 
     public void setPostProduction(String postProduction) {
         this.postProduction = postProduction;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
