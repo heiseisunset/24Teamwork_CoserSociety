@@ -60,10 +60,16 @@ public class PhotographyWorkServiceImpl implements PhotographyWorkService {
 
     @Override
     public boolean deletePhotographyWork(Integer workId) {
-        // 调用 Mapper 删除作品
-        int rowsAffected = photographyWorkMapper.deletePhotographyWork(workId);
-        return rowsAffected > 0; // 如果删除成功，返回 true
+        // 首先删除与作品相关的评论
+        int commentsDeleted = photographyCommentsMapper.deleteCommentsByWorkId(workId);
+
+        // 然后删除作品
+        int workDeleted = photographyWorkMapper.deletePhotographyWork(workId);
+
+        // 如果删除了评论和作品，返回 true
+        return commentsDeleted > 0 && workDeleted > 0;
     }
+
 
     @Override
     public PhotographyWork getPhotographyWorkById(Integer workId) {
