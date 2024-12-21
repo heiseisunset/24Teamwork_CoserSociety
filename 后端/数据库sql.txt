@@ -63,7 +63,7 @@ CREATE TABLE organizer_info_posts (
 );
 
 -- 5. 摄影作品表 (photography_works)
-CREATE TABLE photography_works (
+/*CREATE TABLE photography_works (
     work_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     image_url VARCHAR(255) NOT NULL,
@@ -72,7 +72,28 @@ CREATE TABLE photography_works (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     read_count INT DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
+);*/
+
+删除原有表
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS photography_works;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- 修改后的摄影作品表 (photography_works)
+CREATE TABLE photography_works (
+    work_id INT AUTO_INCREMENT PRIMARY KEY, -- 作品ID，主键，自增长
+    user_id INT,                            -- 发布者用户ID，外键
+    title VARCHAR(255),                     -- 作品标题
+    original_work VARCHAR(255),             -- 原作名称（例如动漫、电影等）
+    character_name VARCHAR(255),            -- 角色名称
+    content TEXT,                           -- 作品介绍
+    image_url VARCHAR(255),                 -- 作品图片的 URL
+    publish_date TIMESTAMP,                 -- 发布日期
+    read_count INT DEFAULT 0,               -- 阅读次数，默认为 0
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 创建时间，默认当前时间
+    FOREIGN KEY (user_id) REFERENCES user(user_id) -- 用户ID外键
 );
+
 
 -- 6. 社团表 (societies)
 CREATE TABLE societies (

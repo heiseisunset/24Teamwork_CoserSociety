@@ -3,14 +3,17 @@ package com.example.demo_dzq.pojo;
 import java.time.LocalDateTime;
 
 public class PhotographyWork {
-    private Integer workId;
-    private Integer userId;
-    private String imageUrl;
-    private String description;
-    private LocalDateTime publishDate;
-    private LocalDateTime createdAt;
-    private Integer readaccount; // 新增字段
-    private String formattedCreateTime; // 格式化后的时间
+    private Integer workId;             // 作品ID
+    private Integer userId;             // 用户ID
+    private String title;               // 作品标题
+    private String originalWork;        // 原作名称
+    private String characterName;       // 角色名称
+    private String content;             // 作品介绍
+    private String imageUrl;            // 作品图片的 URL
+    private LocalDateTime publishDate;  // 发布日期
+    private Integer readCount;          // 阅读次数
+    private LocalDateTime createdAt;    // 创建时间
+    private String formattedCreateTime; // 格式化后的创建时间
 
     // Getter 和 Setter
     public Integer getWorkId() {
@@ -29,20 +32,44 @@ public class PhotographyWork {
         this.userId = userId;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getOriginalWork() {
+        return originalWork;
+    }
+
+    public void setOriginalWork(String originalWork) {
+        this.originalWork = originalWork;
+    }
+
+    public String getCharacterName() {
+        return characterName;
+    }
+
+    public void setCharacterName(String characterName) {
+        this.characterName = characterName;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public LocalDateTime getPublishDate() {
@@ -53,6 +80,14 @@ public class PhotographyWork {
         this.publishDate = publishDate;
     }
 
+    public Integer getReadCount() {
+        return readCount;
+    }
+
+    public void setReadCount(Integer readCount) {
+        this.readCount = readCount;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -61,19 +96,29 @@ public class PhotographyWork {
         this.createdAt = createdAt;
     }
 
-    public Integer getReadaccount() {
-        return readaccount;
-    }
-
-    public void setReadaccount(Integer readaccount) {
-        this.readaccount = readaccount;
-    }
-
     public String getFormattedCreateTime() {
         return formattedCreateTime;
     }
 
     public void setFormattedCreateTime(String formattedCreateTime) {
         this.formattedCreateTime = formattedCreateTime;
+    }
+
+    // 可选：重写 toString() 方法
+    @Override
+    public String toString() {
+        return "PhotographyWork{" +
+                "workId=" + workId +
+                ", userId=" + userId +
+                ", title='" + title + '\'' +
+                ", originalWork='" + originalWork + '\'' +
+                ", characterName='" + characterName + '\'' +
+                ", content='" + content + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", publishDate=" + publishDate +
+                ", readCount=" + readCount +
+                ", createdAt=" + createdAt +
+                ", formattedCreateTime='" + formattedCreateTime + '\'' +
+                '}';
     }
 }

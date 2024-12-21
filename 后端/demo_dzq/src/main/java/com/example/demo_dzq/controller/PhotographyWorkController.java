@@ -38,7 +38,10 @@ public class PhotographyWorkController {
     public Response<PhotographyWorkResponseDTO> addPhotographyWork(
             @RequestParam("file") MultipartFile file,  // 上传图片文件
             @RequestParam("userId") Integer userId,
-            @RequestParam("description") String description) {
+            @RequestParam("title") String title,
+            @RequestParam("originalWork") String originalWork,
+            @RequestParam("characterName") String characterName,
+            @RequestParam("content") String content) {
 
         try {
             // 确保目录存在
@@ -63,22 +66,25 @@ public class PhotographyWorkController {
             // 构造文件的访问URL (假设你的应用能够通过 HTTP 访问 D:/icosImage)
             String imageUrl = "D:/icosImage/" + newFileName; // 根据你项目的实际访问路径调整
 
+            // 创建摄影作品对象并设置字段
             PhotographyWork photographyWork = new PhotographyWork();
             photographyWork.setUserId(userId);
-            photographyWork.setDescription(description);
-            photographyWork.setReadaccount(0);
-            // 设置作品的创建时间和发布时间
-            photographyWork.setCreatedAt(LocalDateTime.now());
-            if (photographyWork.getPublishDate() == null) {
-                photographyWork.setPublishDate(LocalDateTime.now());  // 默认发布为当前时间
-            }
+            photographyWork.setTitle(title);
+            photographyWork.setOriginalWork(originalWork);
+            photographyWork.setCharacterName(characterName);
+            photographyWork.setContent(content);
             photographyWork.setImageUrl(imageUrl);
+            photographyWork.setReadCount(0);
+            photographyWork.setCreatedAt(LocalDateTime.now());
+            photographyWork.setPublishDate(LocalDateTime.now());  // 默认发布为当前时间
+
             int workId = photographyWorkService.addPhotographyWork(photographyWork);
+
             // 创建返回的 DTO 对象
             PhotographyWorkResponseDTO responseDTO = new PhotographyWorkResponseDTO(workId);
             return new Response<>(200, "作品发布成功", responseDTO);
         } catch (Exception e) {
-            return new Response<>(500, "作品发布失败", null);
+            return new Response<>(500, "作品发布失败"+ e.getMessage(), null);
         }
     }
 
@@ -189,7 +195,7 @@ public class PhotographyWorkController {
                         "workId", comment.getWorkId(),
                         "content", comment.getContent(),
                         "createTime", comment.getCreateTime(),  // 你可以通过相应的方式设置创建时间
-                        "formattedCreateTime",comment.getFormattedCreateTime(),
+                        "formattedCreateTime", comment.getFormattedCreateTime(),
                         "user", Map.of(
                                 "userId", user.getUserId(),
                                 "username", user.getUsername(),
@@ -210,5 +216,4 @@ public class PhotographyWorkController {
             return new Response<>(500, "获取评论失败: " + e.getMessage(), null);
         }
     }
-
 }
