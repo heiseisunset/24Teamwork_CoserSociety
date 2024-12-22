@@ -1,10 +1,10 @@
 package com.example.demo_dzq.controller;
 
-import com.example.demo_dzq.dto.AddMemberRequestDTO;
+import com.example.demo_dzq.dto.*;
 import com.example.demo_dzq.pojo.Society;
 import com.example.demo_dzq.service.SocietyMemberService;
+import com.example.demo_dzq.service.SocietyApplicationService;
 import com.example.demo_dzq.service.SocietyService;
-import com.example.demo_dzq.dto.SocietyDetailResponseDTO;  // 导入DTO类
 import com.example.demo_dzq.common.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/societies")
@@ -24,6 +25,8 @@ public class SocietyController {
 
     @Autowired
     private SocietyMemberService societyMemberService;
+    @Autowired
+    private  SocietyApplicationService societyApplicationService;
 
     @GetMapping("/detail")
     public Response<SocietyDetailResponseDTO> getSocietyDetail(@RequestParam  Integer societyId) {
@@ -105,5 +108,38 @@ public class SocietyController {
             return new Response<>(500, "Unexpected error: " + e.getMessage(), null);
         }
     }
+
+    @GetMapping("/members")
+    public Response<SocietyWithApplicationsDTO> getSocietyMembersWithUsers(@RequestBody SocietyRequestDTO societyRequestDTO) {
+        try {
+            Integer societyId = societyRequestDTO.getSocietyId();
+            // 参数校验
+            if (societyId == null || societyId <= 0) {
+                return new Response<>(400, "Invalid societyId provided.", null);
+            }
+
+            // 查询社团成员和申请记录
+            List<SocietyMemberWithUserDTO> members = societyMemberService.getMembersWithUserBySocietyId(societyId);
+            List<SocietyApplicationWithUserDTO> applications = societyApplicationService.getPendingApplicationsWithUserBySocietyId(societyId);
+
+            // 如果没有找到社团成员或者申请记录，返回提示信息
+            if (members == null || members.isEmpty()) {
+                return new Response<>(404, "No members found for the given societyId.", null);
+            }
+
+            if (applications == null || applications.isEmpty()) {
+                return new Response<>(404, "No pending applications found for the given societyId.", null);
+            }
+
+            // 封装响应数据
+            SocietyWithApplicationsDTO responseData = new SocietyWithApplicationsDTO(members, applications);
+            return new Response<>(200, "Successfully retrieved society members and applications with user details.", responseData);
+
+        } catch (Exception e) {
+            // 捕获所有异常并返回系统错误响应
+            return new Response<>(500, "An unexpected error occurred: " + e.getMessage(), null);
+        }
+    }
+
 
 }

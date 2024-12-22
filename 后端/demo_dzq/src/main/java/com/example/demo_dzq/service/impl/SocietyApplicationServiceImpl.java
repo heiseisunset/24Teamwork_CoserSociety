@@ -1,9 +1,12 @@
 package com.example.demo_dzq.service.impl;
 
+import com.example.demo_dzq.dto.SocietyApplicationWithUserDTO;
 import com.example.demo_dzq.mapper.SocietyApplicationMapper;
 import com.example.demo_dzq.mapper.SocietyMemberMapper;
+import com.example.demo_dzq.mapper.UserMapper;
 import com.example.demo_dzq.pojo.SocietyApplication;
 import com.example.demo_dzq.pojo.SocietyMember;
+import com.example.demo_dzq.pojo.User;
 import com.example.demo_dzq.service.SocietyApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,9 @@ public class SocietyApplicationServiceImpl implements SocietyApplicationService 
 
     @Autowired
     private SocietyMemberMapper memberMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public boolean submitApplication(SocietyApplication application) {
@@ -51,4 +57,26 @@ public class SocietyApplicationServiceImpl implements SocietyApplicationService 
     public boolean rejectApplication(Integer applicationId) {
         return applicationMapper.updateApplicationStatus(applicationId, "rejected") > 0;
     }
+
+
+    @Override
+    public List<SocietyApplicationWithUserDTO> getPendingApplicationsWithUserBySocietyId(Integer societyId) {
+        // 1. 获取所有待处理的社团申请（不包含用户信息）
+        List<SocietyApplicationWithUserDTO> applications = applicationMapper.selectPendingApplicationsBySocietyId(societyId);
+
+        // 2. 遍历申请列表，根据 userId 填充 User 信息
+        for (SocietyApplicationWithUserDTO application : applications) {
+            // 获取 userId
+            Integer userId = application.getUserId();
+
+            // 通过 userId 查询用户信息
+            User user = userMapper.findById(userId);
+
+            // 设置 User 信息到 DTO 中
+            application.setUser(user);
+        }
+
+        return applications;
+    }
+
 }
