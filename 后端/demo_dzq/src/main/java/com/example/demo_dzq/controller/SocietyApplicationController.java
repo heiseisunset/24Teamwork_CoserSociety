@@ -1,9 +1,11 @@
 package com.example.demo_dzq.controller;
 
 import com.example.demo_dzq.common.Response;
+import com.example.demo_dzq.dto.ApprovalRequestDTO;
 import com.example.demo_dzq.pojo.SocietyApplication;
 import com.example.demo_dzq.service.SocietyApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,22 +26,35 @@ public class SocietyApplicationController {
         return new Response<>(500, "Failed to submit application.", null);
     }
 
-    @GetMapping("/pending/{societyId}")
-    public Response<List<SocietyApplication>> getPendingApplications(@PathVariable Integer societyId) {
+    @GetMapping("/pending")
+    public Response<List<SocietyApplication>> getPendingApplications(@RequestParam Integer societyId) {
         List<SocietyApplication> applications = applicationService.getPendingApplications(societyId);
         return new Response<>(200, "Pending applications retrieved.", applications);
     }
 
     @PostMapping("/approve")
-    public Response<String> approveApplication(@RequestParam Integer applicationId,
-                                               @RequestParam Integer societyId,
-                                               @RequestParam Integer userId) {
-        boolean isSuccess = applicationService.approveApplication(applicationId, societyId, userId);
-        if (isSuccess) {
-            return new Response<>(200, "Application approved successfully!", null);
+    public Response<String> approveApplication(@RequestBody ApprovalRequestDTO approvalRequest) {
+        try {
+            // 从请求体中获取数据
+            Integer applicationId = approvalRequest.getApplicationId();
+            Integer societyId = approvalRequest.getSocietyId();
+            Integer userId = approvalRequest.getUserId();
+
+            boolean isSuccess = applicationService.approveApplication(applicationId, societyId, userId);
+            if (isSuccess) {
+                return new Response<>(200, "Application approved successfully!", null);
+            } else {
+                return new Response<>(500, "Failed to approve application. The application might have been already processed or does not exist.", null);
+            }
+        } catch (IllegalArgumentException e) {
+            return new Response<>(800, "Invalid input: " + e.getMessage(), null);
+        } catch (DataAccessException e) {
+            return new Response<>(500, "Database error: " + e.getMessage(), null);
+        } catch (Exception e) {
+            return new Response<>(500, "Unexpected error occurred: " + e.getMessage(), null);
         }
-        return new Response<>(500, "Failed to approve application.", null);
     }
+
 
     @PostMapping("/reject")
     public Response<String> rejectApplication(@RequestParam Integer applicationId) {
