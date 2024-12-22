@@ -10,7 +10,9 @@ import com.example.demo_dzq.service.SocietyService;
 import com.example.demo_dzq.dto.SocietyDetailResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +71,39 @@ public class SocietyServiceImpl implements SocietyService {
         }
 
         return new SocietyDetailResponseDTO(society, memberDetails);
+    }
+
+    @Transactional
+    @Override
+    public boolean createSocietyWithFounderNameAndAddMember(Society society) {
+        // 根据创始人名字查询用户表获取创始人ID
+        Integer founderId = userMapper.getUserIdByUsername(society.getFounderName());
+        if (founderId == null) {
+            return false; // 如果未找到对应用户，则创建失败
+        }
+
+        // 设置创始人ID和当前时间
+        society.setFounderId(founderId);
+        society.setCreatedAt(LocalDateTime.now());
+
+        // 插入社团记录
+        int societyInsertResult = societyMapper.insertSociety(society);
+        if (societyInsertResult <= 0) {
+            return false; // 如果插入社团记录失败
+        }
+
+        // 获取插入后的社团ID
+        Integer societyId = society.getSocietyId();
+
+        // 插入创始人到社团成员表
+        SocietyMember societyMember = new SocietyMember();
+        societyMember.setSocietyId(societyId);
+        societyMember.setUserId(founderId);
+        societyMember.setRole("leader");
+        societyMember.setJoinedAt(LocalDateTime.now());
+
+        int memberInsertResult = societyMemberMapper.insertSocietyMember(societyMember);
+        return memberInsertResult > 0; // 返回是否成功
     }
 
 

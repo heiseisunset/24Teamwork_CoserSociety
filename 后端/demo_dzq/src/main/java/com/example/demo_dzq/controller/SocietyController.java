@@ -1,10 +1,17 @@
 package com.example.demo_dzq.controller;
 
+import com.example.demo_dzq.pojo.Society;
 import com.example.demo_dzq.service.SocietyService;
 import com.example.demo_dzq.dto.SocietyDetailResponseDTO;  // 导入DTO类
 import com.example.demo_dzq.common.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/v1/societies")
@@ -23,4 +30,60 @@ public class SocietyController {
             return new Response<>(500, "Failed to fetch society details", null);
         }
     }
+
+    @PostMapping("/create")
+    public Response<String> createSociety(
+            @RequestParam("file") MultipartFile file,  // 上传的图片文件
+            @RequestParam("name") String name,
+            @RequestParam("founderName") String founderName,
+            @RequestParam("mainCity") String mainCity,
+            @RequestParam("description") String description) {
+        try {
+            // 确保目录存在
+            Path uploadDir = Paths.get("D:/icosImage");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir); // 创建目录
+            }
+
+            // 获取文件扩展名
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = originalFileName != null && originalFileName.contains(".")
+                    ? originalFileName.substring(originalFileName.lastIndexOf("."))
+                    : ".jpg";
+
+            // 生成唯一文件名，避免冲突
+            String newFileName = System.currentTimeMillis() + fileExtension;
+
+            // 文件保存路径
+            Path targetPath = uploadDir.resolve(newFileName);
+
+            // 保存文件到磁盘
+            file.transferTo(targetPath.toFile());
+
+            // 构造文件的访问URL (假设你的应用能够通过 HTTP 访问 D:/icosImage)
+            String imageUrl = "D:/icosImage/" + newFileName; // 根据你项目的实际访问路径调整
+
+            // 构造 Society 对象
+            Society society = new Society();
+            society.setName(name);
+            society.setFounderName(founderName);
+            society.setMainCity(mainCity);
+            society.setDescription(description);
+            society.setLogoUrl(imageUrl);
+
+            // 调用 Service 方法创建社团并添加到成员关系表
+            boolean isSuccess = societyService.createSocietyWithFounderNameAndAddMember(society);
+
+            if (isSuccess) {
+                return new Response<>(200, "Society created successfully!", null);
+            } else {
+                return new Response<>(500, "Failed to create society.", null);
+            }
+        } catch (IOException e) {
+            return new Response<>(500, "Error occurred while uploading file: " + e.getMessage(), null);
+        } catch (Exception e) {
+            return new Response<>(500, "Failed to create society: " + e.getMessage(), null);
+        }
+    }
+
 }

@@ -11,4 +11,5 @@ public interface SocietyService {
     List<SocietyMember> getSocietyMembersBySocietyId(Integer societyId);
     User getUserById(Integer userId);
     public SocietyDetailResponseDTO getSocietyDetail(Integer societyId);
+    boolean createSocietyWithFounderNameAndAddMember(Society society);
 }
