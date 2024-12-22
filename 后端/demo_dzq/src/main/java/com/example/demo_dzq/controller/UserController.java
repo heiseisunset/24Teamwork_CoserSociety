@@ -1,5 +1,7 @@
 package com.example.demo_dzq.controller;
 
+import com.example.demo_dzq.dto.UserRegisterDTO;
+import com.example.demo_dzq.mapper.UserMapper;
 import com.example.demo_dzq.pojo.User;
 import com.example.demo_dzq.dto.UserDTO;
 import com.example.demo_dzq.service.UserService;
@@ -8,6 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -16,27 +24,75 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // 用户注册接口
+    @Autowired
+    private UserMapper userMapper;
+
     @PostMapping("/register")
-    public ResponseEntity<Response<UserDTO>> registerUser(@RequestBody User user) {
+    public ResponseEntity<Response<UserRegisterDTO>> registerUser(
+            @RequestParam("file") MultipartFile file,  // 上传头像文件
+            @RequestParam("username") String username,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("phone") String phone) {
+
         try {
+            // 确保目录存在
+            Path uploadDir = Paths.get("D:/icosImage");
+            if (!Files.exists(uploadDir)) {
+                Files.createDirectories(uploadDir); // 创建目录
+            }
+
+            // 获取文件扩展名
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = originalFileName != null ? originalFileName.substring(originalFileName.lastIndexOf(".")) : ".jpg";
+
+            // 生成唯一的文件名，避免文件名冲突
+            String newFileName = System.currentTimeMillis() + fileExtension;
+
+            // 目标路径
+            Path targetPath = uploadDir.resolve(newFileName);
+
+            // 保存文件到磁盘
+            file.transferTo(targetPath);
+
+            // 构造头像的访问URL
+            String imageUrl = "D:/icosImage/" + newFileName; // 根据你项目的实际访问路径调整
+
+            System.out.println("Generated imageUrl (Local path): " + imageUrl);
+            // 创建 User 对象
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setPhone(phone);
+            user.setAvatarUrl(imageUrl); // 设置头像URL
+            user.setBio("此人很懒，暂无介绍");
+            user.setRole("enthusiast");
             // 调用服务层处理注册逻辑
-            userService.registerUser(user);
+            userMapper.insertUser(user);
 
-            // 构建成功响应：仅返回非敏感信息
-            User registeredUser = userService.findByUsername(user.getUsername()); // 获取注册成功的用户信息
+            // 获取注册成功的用户信息
+            User registeredUser = userService.findByUsername(user.getUsername());
 
-            // 将 User 转换为 UserDTO
-            UserDTO userDTO = new UserDTO(registeredUser.getUserId(), registeredUser.getUsername(), registeredUser.getEmail());
+            // 将 User 转换为 UserRegisterDTO
+            UserRegisterDTO userDTO = new UserRegisterDTO(registeredUser.getUserId(), registeredUser.getUsername(), registeredUser.getEmail(), registeredUser.getAvatarUrl());
 
-            Response<UserDTO> response = new Response<>(HttpStatus.CREATED.value(), "User registered successfully", userDTO);
+            // 返回成功响应
+            Response<UserRegisterDTO> response = new Response<>(HttpStatus.CREATED.value(), "User registered successfully", userDTO);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } catch (IOException e) {
+            // 处理文件上传异常
+            Response<UserRegisterDTO> errorResponse = new Response<>(HttpStatus.BAD_REQUEST.value(), "Error occurred while uploading avatar: " + e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            // 构建失败响应
-            Response<UserDTO> errorResponse = new Response<>(HttpStatus.BAD_REQUEST.value(), "Error: " + e.getMessage());
+            // 处理其他异常
+            Response<UserRegisterDTO> errorResponse = new Response<>(HttpStatus.BAD_REQUEST.value(), "Error: " + e.getMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
     // 用户登录接口
     @PostMapping("/login")
@@ -102,4 +158,5 @@ public class UserController {
             return new Response<>(500, "Error occurred: " + e.getMessage(), null);
         }
     }
+    
 }
