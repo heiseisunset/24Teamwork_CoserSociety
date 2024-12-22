@@ -87,14 +87,14 @@ public class SocietyInfoPostController {
         }
     }
 
-//    // 根据社团ID获取所有发布的社团信息
-//    @GetMapping("/all")
-//    public Response<List<SocietyInfoPost>> getSocietyInfoPosts(@RequestParam Integer societyId) {
-//        try {
-//            List<SocietyInfoPost> posts = societyInfoPostService.getSocietyInfoPostsBySocietyId(societyId);
-//            return new Response<>(200, "社团信息获取成功", posts);
-//        } catch (Exception e) {
-//            return new Response<>(500, "Error occurred: " + e.getMessage(), null);
-//        }
-//    }
+    // 根据社团ID获取所有发布的社团信息
+    @GetMapping("/all")
+    public Response<List<SocietyInfoPost>> getSocietyInfoPosts(@RequestParam Integer societyId) {
+        try {
+            List<SocietyInfoPost> posts = societyInfoPostService.getSocietyInfoPostsBySocietyId(societyId);
+            return new Response<>(200, "社团信息获取成功", posts);
+        } catch (Exception e) {
+            return new Response<>(500, "Error occurred: " + e.getMessage(), null);
+        }
+    }
 }
