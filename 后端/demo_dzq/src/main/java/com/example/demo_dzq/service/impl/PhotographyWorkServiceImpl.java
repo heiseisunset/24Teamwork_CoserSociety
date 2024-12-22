@@ -34,6 +34,10 @@ public class PhotographyWorkServiceImpl implements PhotographyWorkService {
 
     @Override
     public int addPhotographyWork(PhotographyWork photographyWork) {
+        // 如果没有提供 category 则设置为默认值 "photography"
+        if (photographyWork.getCategory() == null) {
+            photographyWork.setCategory("photography");
+        }
         // 插入数据并返回生成的作品ID
         photographyWorkMapper.insertPhotographyWork(photographyWork);
         return photographyWorkMapper.getLastInsertId();

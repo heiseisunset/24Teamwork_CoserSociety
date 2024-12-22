@@ -14,6 +14,7 @@ public class PhotographyWork {
     private Integer readCount;          // 阅读次数
     private LocalDateTime createdAt;    // 创建时间
     private String formattedCreateTime; // 格式化后的创建时间
+    private String category;            // 新增字段: 作品类别
 
     // Getter 和 Setter
     public Integer getWorkId() {
@@ -104,6 +105,14 @@ public class PhotographyWork {
         this.formattedCreateTime = formattedCreateTime;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     // 可选：重写 toString() 方法
     @Override
     public String toString() {
@@ -119,6 +128,7 @@ public class PhotographyWork {
                 ", readCount=" + readCount +
                 ", createdAt=" + createdAt +
                 ", formattedCreateTime='" + formattedCreateTime + '\'' +
+                ", category='" + category + '\'' +
                 '}';
     }
 }

@@ -94,6 +94,9 @@ CREATE TABLE photography_works (
     FOREIGN KEY (user_id) REFERENCES user(user_id) -- 用户ID外键
 );
 
+增加”类别”字段：
+ALTER TABLE photography_works
+ADD COLUMN category VARCHAR(100) NOT NULL AFTER created_at;
 
 -- 6. 社团表 (societies)
 CREATE TABLE societies (
