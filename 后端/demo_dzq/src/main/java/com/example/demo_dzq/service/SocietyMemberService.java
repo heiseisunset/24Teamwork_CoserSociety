@@ -2,6 +2,7 @@ package com.example.demo_dzq.service;
 
 
 import com.example.demo_dzq.dto.AddMemberRequestDTO;
+import com.example.demo_dzq.dto.SocietyMemberWithDetailsDTO;
 import com.example.demo_dzq.dto.SocietyMemberWithUserDTO;
 import com.example.demo_dzq.dto.SocietyWithApplicationsDTO;
 
@@ -16,4 +17,7 @@ public interface SocietyMemberService {
     public SocietyWithApplicationsDTO getSocietyWithApplications(Integer societyId);
 
     List<SocietyMemberWithUserDTO> getMembersWithUserBySocietyId(Integer societyId);
+
+    // 根据用户ID获取该用户参与的所有社团和社团的详细信息
+    SocietyMemberWithDetailsDTO getSocietyMembersAndSocietyInfo(Integer userId);
 }

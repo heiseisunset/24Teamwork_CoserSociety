@@ -1,13 +1,11 @@
 package com.example.demo_dzq.service.impl;
 
-import com.example.demo_dzq.dto.AddMemberRequestDTO;
-import com.example.demo_dzq.dto.SocietyApplicationWithUserDTO;
-import com.example.demo_dzq.dto.SocietyMemberWithUserDTO;
-import com.example.demo_dzq.dto.SocietyWithApplicationsDTO;
+import com.example.demo_dzq.dto.*;
 import com.example.demo_dzq.mapper.SocietyApplicationMapper;
 import com.example.demo_dzq.mapper.SocietyMemberMapper;
 import com.example.demo_dzq.mapper.UserMapper;
 import com.example.demo_dzq.mapper.SocietyMemberMapper;
+import com.example.demo_dzq.pojo.Society;
 import com.example.demo_dzq.pojo.SocietyApplication;
 import com.example.demo_dzq.pojo.SocietyMember;
 import com.example.demo_dzq.service.SocietyMemberService;
@@ -15,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo_dzq.pojo.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,6 +27,10 @@ public class SocietyMemberServiceImpl implements SocietyMemberService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private SocietyMemberMapper societyMemberMapper;
+
     /**
      * 更新社团成员角色
      * @param societyId 社团ID
@@ -132,5 +135,33 @@ public class SocietyMemberServiceImpl implements SocietyMemberService {
 
         return members;
     }
+
+    @Override
+    public SocietyMemberWithDetailsDTO getSocietyMembersAndSocietyInfo(Integer userId) {
+        // 1. 查询用户参与的所有社团成员记录
+        List<SocietyMember> societyMembers = societyMemberMapper.getSocietyMembersByUserId(userId);
+
+        // 2. 创建 DTO 对象用于封装结果
+        SocietyMemberWithDetailsDTO dto = new SocietyMemberWithDetailsDTO();
+
+        // 3. 创建一个列表来存储所有的社团信息
+        List<Society> societies = new ArrayList<>();
+
+        // 4. 获取每个社团的详细信息并添加到列表中
+        for (SocietyMember member : societyMembers) {
+            // 获取社团详细信息
+            Society society = societyMemberMapper.getSocietyById(member.getSocietyId());
+
+            // 将社团信息添加到列表
+            societies.add(society);
+        }
+
+        // 设置 DTO 的社团信息列表
+        dto.setSociety(societies); // 修改为设置一个包含多个社团的列表
+        dto.setSocietyMembers(societyMembers);  // 设置社团成员信息
+
+        return dto;
+    }
+
 
 }

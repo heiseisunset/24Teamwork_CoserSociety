@@ -141,5 +141,17 @@ public class SocietyController {
         }
     }
 
+    // 获取用户参与的社团信息
+    @GetMapping("/participation")
+    public Response<SocietyMemberWithDetailsDTO> getSocietyMembersAndSocietyInfo(@RequestParam Integer userId) {
+        try {
+            // 获取用户参与的社团信息及社团详情
+            SocietyMemberWithDetailsDTO result = societyMemberService.getSocietyMembersAndSocietyInfo(userId);
+            return new Response<>(200, "获取社团信息成功", result);
+        } catch (Exception e) {
+            return new Response<>(500, "获取社团信息失败: " + e.getMessage(), null);
+        }
+    }
+
 
 }

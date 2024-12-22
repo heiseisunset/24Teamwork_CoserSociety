@@ -1,6 +1,7 @@
 package com.example.demo_dzq.mapper;
 
 import com.example.demo_dzq.dto.SocietyMemberWithUserDTO;
+import com.example.demo_dzq.pojo.Society;
 import com.example.demo_dzq.pojo.SocietyMember;
 import org.apache.ibatis.annotations.*;
 
@@ -44,4 +45,12 @@ public interface SocietyMemberMapper {
             "JOIN user u ON sm.user_id = u.user_id " +
             "WHERE sm.society_id = #{societyId}")
     List<SocietyMemberWithUserDTO> selectMembersWithUserBySocietyId(@Param("societyId") Integer societyId);
+
+    // 根据用户ID获取该用户参与的所有社团成员记录
+    @Select("SELECT * FROM society_members WHERE user_id = #{userId}")
+    List<SocietyMember> getSocietyMembersByUserId(Integer userId);
+
+    // 根据社团ID获取社团详细信息
+    @Select("SELECT * FROM societies WHERE society_id = #{societyId}")
+    Society getSocietyById(Integer societyId);
 }
