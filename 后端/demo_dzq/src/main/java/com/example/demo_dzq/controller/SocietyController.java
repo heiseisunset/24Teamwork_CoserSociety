@@ -1,6 +1,8 @@
 package com.example.demo_dzq.controller;
 
+import com.example.demo_dzq.dto.AddMemberRequestDTO;
 import com.example.demo_dzq.pojo.Society;
+import com.example.demo_dzq.service.SocietyMemberService;
 import com.example.demo_dzq.service.SocietyService;
 import com.example.demo_dzq.dto.SocietyDetailResponseDTO;  // 导入DTO类
 import com.example.demo_dzq.common.Response;
@@ -19,6 +21,9 @@ public class SocietyController {
 
     @Autowired
     private SocietyService societyService;
+
+    @Autowired
+    private SocietyMemberService societyMemberService;
 
     @GetMapping("/detail")
     public Response<SocietyDetailResponseDTO> getSocietyDetail(@RequestParam  Integer societyId) {
@@ -83,6 +88,21 @@ public class SocietyController {
             return new Response<>(500, "Error occurred while uploading file: " + e.getMessage(), null);
         } catch (Exception e) {
             return new Response<>(500, "Failed to create society: " + e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/addMember")
+    public Response<String> addMember(@RequestBody AddMemberRequestDTO request) {
+        try {
+            boolean isSuccess = societyMemberService.addMemberToSociety(request);
+            if (isSuccess) {
+                return new Response<>(200, "User added to society successfully.", null);
+            }
+            return new Response<>(500, "Failed to add user to society.", null);
+        } catch (IllegalArgumentException e) {
+            return new Response<>(400, "Error: " + e.getMessage(), null);
+        } catch (Exception e) {
+            return new Response<>(500, "Unexpected error: " + e.getMessage(), null);
         }
     }
 

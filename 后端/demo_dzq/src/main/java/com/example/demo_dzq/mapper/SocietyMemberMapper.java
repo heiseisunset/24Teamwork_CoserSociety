@@ -20,4 +20,11 @@ public interface SocietyMemberMapper {
     int updateMemberRole(@Param("societyId") Integer societyId,
                          @Param("userId") Integer userId,
                          @Param("role") String role);
+
+
+    // 根据社团ID和用户ID查询社团成员
+    @Select("SELECT * FROM society_members WHERE society_id = #{societyId} AND user_id = #{userId}")
+    SocietyMember findBySocietyIdAndUserId(@Param("societyId") Integer societyId,
+                                           @Param("userId") Integer userId);
+
 }

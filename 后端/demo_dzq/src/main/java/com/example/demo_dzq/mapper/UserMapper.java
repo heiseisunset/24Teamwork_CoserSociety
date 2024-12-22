@@ -51,4 +51,7 @@ public interface UserMapper {
     // 根据用户ID查询用户信息
     @Select("SELECT * FROM user WHERE user_id = #{userId}")
     User getUserById(Integer userId);
+
+    @Select("SELECT * FROM user WHERE phone = #{phoneNumber} AND username = #{userName}")
+    User findByPhoneNumberAndUserName(String phoneNumber, String userName);
 }
