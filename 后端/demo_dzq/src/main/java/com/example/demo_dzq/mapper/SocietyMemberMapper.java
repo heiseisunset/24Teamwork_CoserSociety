@@ -53,4 +53,7 @@ public interface SocietyMemberMapper {
     // 根据社团ID获取社团详细信息
     @Select("SELECT * FROM societies WHERE society_id = #{societyId}")
     Society getSocietyById(Integer societyId);
+
+    @Delete("DELETE FROM society_members WHERE user_id = #{userId} AND society_id = #{societyId}")
+    int deleteMemberFromSociety(@Param("userId") Integer userId, @Param("societyId") Integer societyId);
 }

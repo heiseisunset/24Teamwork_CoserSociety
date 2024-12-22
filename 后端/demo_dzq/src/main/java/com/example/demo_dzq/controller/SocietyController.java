@@ -153,5 +153,20 @@ public class SocietyController {
         }
     }
 
+    @DeleteMapping("/leave")
+    public Response<String> leaveSociety(@RequestParam Integer userId, @RequestParam Integer societyId) {
+        try {
+            // 调用服务层逻辑删除社团成员记录
+            boolean success = societyMemberService.deleteMemberFromSociety(userId, societyId);
+
+            if (success) {
+                return new Response<>(200, "退出社团成功", null);
+            } else {
+                return new Response<>(500, "退出社团失败", null);
+            }
+        } catch (Exception e) {
+            return new Response<>(500, "系统错误: " + e.getMessage(), null);
+        }
+    }
 
 }

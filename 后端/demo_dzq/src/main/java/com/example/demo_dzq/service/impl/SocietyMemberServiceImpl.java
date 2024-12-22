@@ -164,4 +164,9 @@ public class SocietyMemberServiceImpl implements SocietyMemberService {
     }
 
 
+    @Override
+    public boolean deleteMemberFromSociety(Integer userId, Integer societyId) {
+        int result = societyMemberMapper.deleteMemberFromSociety(userId, societyId);
+        return result > 0;  // 如果删除成功，返回 true
+    }
 }

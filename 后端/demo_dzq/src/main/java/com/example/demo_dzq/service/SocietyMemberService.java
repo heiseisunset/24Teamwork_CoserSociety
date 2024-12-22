@@ -20,4 +20,7 @@ public interface SocietyMemberService {
 
     // 根据用户ID获取该用户参与的所有社团和社团的详细信息
     SocietyMemberWithDetailsDTO getSocietyMembersAndSocietyInfo(Integer userId);
+
+    // 删除社团成员
+    boolean deleteMemberFromSociety(Integer userId, Integer societyId);
 }
