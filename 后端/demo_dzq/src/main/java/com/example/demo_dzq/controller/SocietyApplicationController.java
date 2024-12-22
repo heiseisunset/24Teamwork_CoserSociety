@@ -2,9 +2,11 @@ package com.example.demo_dzq.controller;
 
 import com.example.demo_dzq.common.Response;
 import com.example.demo_dzq.dto.ApprovalRequestDTO;
+import com.example.demo_dzq.dto.EditMemberRoleRequestDTO;
 import com.example.demo_dzq.dto.RejectApplicationRequestDTO;
 import com.example.demo_dzq.pojo.SocietyApplication;
 import com.example.demo_dzq.service.SocietyApplicationService;
+import com.example.demo_dzq.service.SocietyMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,8 @@ public class SocietyApplicationController {
 
     @Autowired
     private SocietyApplicationService applicationService;
+    @Autowired
+    private SocietyMemberService societyMemberService;
 
     @PostMapping("/submit")
     public Response<String> submitApplication(@RequestBody SocietyApplication application) {
@@ -64,5 +68,18 @@ public class SocietyApplicationController {
             return new Response<>(200, "Application rejected successfully!", null);
         }
         return new Response<>(500, "Failed to reject application.", null);
+    }
+
+    @PostMapping("/editMemberRole")
+    public Response<String> editMemberRole(@RequestBody EditMemberRoleRequestDTO request) {
+        boolean isSuccess = societyMemberService.editMemberRole(
+                request.getSocietyId(),
+                request.getUserId(),
+                request.getRole()
+        );
+        if (isSuccess) {
+            return new Response<>(200, "Member role updated successfully.", null);
+        }
+        return new Response<>(500, "Failed to update member role.", null);
     }
 }
