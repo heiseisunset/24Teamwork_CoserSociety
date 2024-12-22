@@ -179,3 +179,16 @@ CREATE TABLE comments_for_organizer_info_posts (
     FOREIGN KEY (post_id) REFERENCES organizer_info_posts(post_id),  -- 外键关联发布信息ID
     FOREIGN KEY (user_id) REFERENCES user(user_id)  -- 外键关联用户ID
 );
+
+--society_applications社团申请表
+CREATE TABLE society_applications (
+    application_id INT AUTO_INCREMENT PRIMARY KEY, -- 主键，自增
+    society_id INT NOT NULL,                       -- 关联的社团ID
+    user_id INT NOT NULL,                          -- 申请者的用户ID
+    status VARCHAR(20) NOT NULL DEFAULT 'pending', -- 申请状态：pending, approved, rejected
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- 申请创建时间
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 状态更新时间
+    FOREIGN KEY (society_id) REFERENCES societies(society_id) ON DELETE CASCADE, -- 关联社团表
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE            -- 关联用户表
+);
+
