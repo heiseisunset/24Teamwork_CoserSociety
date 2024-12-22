@@ -2,6 +2,7 @@ package com.example.demo_dzq.controller;
 
 import com.example.demo_dzq.common.Response;
 import com.example.demo_dzq.dto.ApprovalRequestDTO;
+import com.example.demo_dzq.dto.RejectApplicationRequestDTO;
 import com.example.demo_dzq.pojo.SocietyApplication;
 import com.example.demo_dzq.service.SocietyApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,8 @@ public class SocietyApplicationController {
 
 
     @PostMapping("/reject")
-    public Response<String> rejectApplication(@RequestParam Integer applicationId) {
-        boolean isSuccess = applicationService.rejectApplication(applicationId);
+    public Response<String> rejectApplication(@RequestBody RejectApplicationRequestDTO request) {
+        boolean isSuccess = applicationService.rejectApplication(request.getApplicationId());
         if (isSuccess) {
             return new Response<>(200, "Application rejected successfully!", null);
         }
