@@ -1,24 +1,27 @@
 package com.example.demo_dzq.dto;
 
 public class UserDTO {
-
-    private int userId;
+    private Integer userId;
     private String username;
     private String email;
+    private String avatarUrl; // 新增头像字段
+    private String role;      // 新增角色字段
 
     // 构造函数
-    public UserDTO(int userId, String username, String email) {
+    public UserDTO(Integer userId, String username, String email, String avatarUrl, String role) {
         this.userId = userId;
         this.username = username;
         this.email = email;
+        this.avatarUrl = avatarUrl;
+        this.role = role;
     }
 
-    // getter 和 setter
-    public int getUserId() {
+    // Getter 和 Setter
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -36,5 +39,21 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

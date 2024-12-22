@@ -113,8 +113,14 @@ public class UserController {
                 return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
             }
 
-            // 密码匹配成功，返回用户信息（不返回密码）
-            UserDTO userDTO = new UserDTO(existingUser.getUserId(), existingUser.getUsername(), existingUser.getEmail());
+            // 密码匹配成功，返回用户信息（包括头像和角色）
+            UserDTO userDTO = new UserDTO(
+                    existingUser.getUserId(),
+                    existingUser.getUsername(),
+                    existingUser.getEmail(),
+                    existingUser.getAvatarUrl(),  // 添加头像
+                    existingUser.getRole()         // 添加角色
+            );
             Response<UserDTO> response = new Response<>(HttpStatus.OK.value(), "Login successful", userDTO);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
@@ -123,6 +129,7 @@ public class UserController {
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     // 用户设置身份接口
     @PutMapping("/update")
@@ -158,5 +165,5 @@ public class UserController {
             return new Response<>(500, "Error occurred: " + e.getMessage(), null);
         }
     }
-    
+
 }
