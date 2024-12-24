@@ -16,8 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -84,7 +83,7 @@ public class PhotographyWorkController {
             PhotographyWorkResponseDTO responseDTO = new PhotographyWorkResponseDTO(workId);
             return new Response<>(200, "作品发布成功", responseDTO);
         } catch (Exception e) {
-            return new Response<>(500, "作品发布失败"+ e.getMessage(), null);
+            return new Response<>(500, "作品发布失败" + e.getMessage(), null);
         }
     }
 
@@ -174,46 +173,52 @@ public class PhotographyWorkController {
         }
     }
 
-    // 获取摄影作品的所有评论及评论用户信息
     @GetMapping("/comment/all")
-    public Response<List<Map<String, Object>>> getPhotographyComments(
-            @RequestParam Integer workId) {
+    public Response<List<Map<String, Object>>> getPhotographyComments(@RequestParam Integer workId) {
         try {
-            // 获取摄影作品的评论列表
             List<PhotographyComments> comments = photographyCommentsService.getCommentsByWorkId(workId);
 
             if (comments.isEmpty()) {
                 return new Response<>(404, "该作品没有评论", null);
             }
 
-            // 获取评论用户的信息并组织数据结构
             List<Map<String, Object>> commentDetails = comments.stream().map(comment -> {
                 User user = userService.getUserById(comment.getUserId());
-                Map<String, Object> commentData = Map.of(
-                        "id", comment.getId(),
-                        "userId", comment.getUserId(),
-                        "workId", comment.getWorkId(),
-                        "content", comment.getContent(),
-                        "createTime", comment.getCreateTime(),  // 你可以通过相应的方式设置创建时间
-                        "formattedCreateTime", comment.getFormattedCreateTime(),
-                        "user", Map.of(
-                                "userId", user.getUserId(),
-                                "username", user.getUsername(),
-                                "password", user.getPassword(),  // 如果不需要密码，可以去掉
-                                "email", user.getEmail(),
-                                "phone", user.getPhone(),
-                                "avatarUrl", user.getAvatarUrl(),
-                                "bio", user.getBio(),
-                                "role", user.getRole(),
-                                "createdAt", user.getCreatedAt()
-                        )
-                );
+                String content = Optional.ofNullable(comment.getContent()).orElse("评论内容为空");
+
+                Map<String, Object> commentData = new HashMap<>();
+                commentData.put("id", comment.getId());
+                commentData.put("userId", comment.getUserId());
+                commentData.put("workId", comment.getWorkId());
+                commentData.put("content", content);
+                commentData.put("createTime", comment.getCreateTime());
+                commentData.put("formattedCreateTime", comment.getFormattedCreateTime());
+
+                if (user != null) {
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("userId", user.getUserId());
+                    userData.put("username", user.getUsername());
+                    userData.put("email", user.getEmail());
+                    userData.put("phone", Optional.ofNullable(user.getPhone()).orElse("无"));
+                    userData.put("avatarUrl", Optional.ofNullable(user.getAvatarUrl()).orElse("无"));
+                    userData.put("bio", user.getBio());
+                    userData.put("role", user.getRole());
+                    userData.put("createdAt", user.getCreatedAt());
+                    commentData.put("user", userData);
+                } else {
+                    commentData.put("user", "用户信息不存在");
+                }
+
                 return commentData;
             }).collect(Collectors.toList());
 
+
             return new Response<>(200, "评论获取成功", commentDetails);
         } catch (Exception e) {
+            e.printStackTrace(); // 打印完整的异常信息
             return new Response<>(500, "获取评论失败: " + e.getMessage(), null);
         }
     }
+
 }
+
