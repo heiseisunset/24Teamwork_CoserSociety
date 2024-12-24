@@ -16,25 +16,32 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/v1/societies")
 public class SocietyController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SocietyController.class);
 
     @Autowired
     private SocietyService societyService;
 
     @Autowired
     private SocietyMemberService societyMemberService;
+
     @Autowired
-    private  SocietyApplicationService societyApplicationService;
+    private SocietyApplicationService societyApplicationService;
 
     @GetMapping("/detail")
-    public Response<SocietyDetailResponseDTO> getSocietyDetail(@RequestParam  Integer societyId) {
+    public Response<SocietyDetailResponseDTO> getSocietyDetail(@RequestParam Integer societyId) {
         try {
             // 调用服务层获取社团详细信息
             SocietyDetailResponseDTO response = societyService.getSocietyDetail(societyId);
             return new Response<>(200, "Success", response);
         } catch (Exception e) {
+            logger.error("Failed to fetch society details for societyId: {}", societyId, e);
             return new Response<>(500, "Failed to fetch society details", null);
         }
     }
@@ -88,8 +95,10 @@ public class SocietyController {
                 return new Response<>(500, "Failed to create society.", null);
             }
         } catch (IOException e) {
+            logger.error("Error occurred while uploading file", e);
             return new Response<>(500, "Error occurred while uploading file: " + e.getMessage(), null);
         } catch (Exception e) {
+            logger.error("Failed to create society", e);
             return new Response<>(500, "Failed to create society: " + e.getMessage(), null);
         }
     }
@@ -103,8 +112,10 @@ public class SocietyController {
             }
             return new Response<>(500, "Failed to add user to society.", null);
         } catch (IllegalArgumentException e) {
+            logger.warn("Error adding member to society: {}", e.getMessage());
             return new Response<>(400, "Error: " + e.getMessage(), null);
         } catch (Exception e) {
+            logger.error("Unexpected error while adding member", e);
             return new Response<>(500, "Unexpected error: " + e.getMessage(), null);
         }
     }
@@ -124,11 +135,12 @@ public class SocietyController {
 
             // 如果没有找到社团成员或者申请记录，返回提示信息
             if (members == null || members.isEmpty()) {
+                logger.warn("No members found for societyId: {}", societyId);
                 return new Response<>(404, "No members found for the given societyId.", null);
             }
 
             if (applications == null || applications.isEmpty()) {
-                return new Response<>(404, "No pending applications found for the given societyId.", null);
+                logger.info("No pending applications found for societyId: {}", societyId);
             }
 
             // 封装响应数据
@@ -136,6 +148,7 @@ public class SocietyController {
             return new Response<>(200, "Successfully retrieved society members and applications with user details.", responseData);
 
         } catch (Exception e) {
+            logger.error("An unexpected error occurred while fetching members and applications", e);
             // 捕获所有异常并返回系统错误响应
             return new Response<>(500, "An unexpected error occurred: " + e.getMessage(), null);
         }
@@ -149,6 +162,7 @@ public class SocietyController {
             SocietyMemberWithDetailsDTO result = societyMemberService.getSocietyMembersAndSocietyInfo(userId);
             return new Response<>(200, "获取社团信息成功", result);
         } catch (Exception e) {
+            logger.error("Error occurred while fetching society participation details", e);
             return new Response<>(500, "获取社团信息失败: " + e.getMessage(), null);
         }
     }
@@ -165,8 +179,8 @@ public class SocietyController {
                 return new Response<>(500, "退出社团失败", null);
             }
         } catch (Exception e) {
+            logger.error("Error occurred while a user leaves a society", e);
             return new Response<>(500, "系统错误: " + e.getMessage(), null);
         }
     }
-
 }
