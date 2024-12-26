@@ -149,6 +149,9 @@ CREATE TABLE help_requests (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+增加字段表示是否解决求助
+ALTER TABLE help_requests
+ADD COLUMN is_resolved BOOLEAN DEFAULT FALSE COMMENT '求助是否解决';
 
 -- 10. 评论表 (comments for coser works)
 CREATE TABLE comments (

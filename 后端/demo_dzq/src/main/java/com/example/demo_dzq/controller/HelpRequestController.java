@@ -2,6 +2,7 @@ package com.example.demo_dzq.controller;
 
 import com.example.demo_dzq.common.Response;
 import com.example.demo_dzq.dto.HelpRequestResponseDTO;
+import com.example.demo_dzq.dto.RequestIdDTO;
 import com.example.demo_dzq.pojo.HelpRequest;
 import com.example.demo_dzq.service.HelpRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,9 @@ public class HelpRequestController {
             helpRequest.setFee(feeParsed);
             helpRequest.setCity(city);
             helpRequest.setImageUrl(imageUrl);
+
+            // 明确设置为未解决
+            helpRequest.setIsResolved(false);
             int requestId = helpRequestService.addHelpRequest(helpRequest);
             HelpRequestResponseDTO responseDTO = new HelpRequestResponseDTO(requestId);
             return new Response<>(200, "求助发布成功", responseDTO);
@@ -106,4 +110,33 @@ public class HelpRequestController {
             return new Response<>(500, "获取求助列表失败: " + e.getMessage(), null);
         }
     }
+
+    @PutMapping("/resolve")
+    public Response<Void> markAsResolved(@RequestBody RequestIdDTO requestIdDTO) {
+        try {
+            boolean result = helpRequestService.markAsResolved(requestIdDTO.getRequestId());
+            if (result) {
+                return new Response<>(200, "求助设置为已解决成功", null);
+            } else {
+                return new Response<>(404, "未找到对应的求助请求", null);
+            }
+        } catch (Exception e) {
+            return new Response<>(500, "操作失败: " + e.getMessage(), null);
+        }
+    }
+
+    @PutMapping("/unresolve")
+    public Response<Void> markAsUnresolved(@RequestBody RequestIdDTO requestIdDTO) {
+        try {
+            boolean result = helpRequestService.markAsUnresolved(requestIdDTO.getRequestId());
+            if (result) {
+                return new Response<>(200, "求助设置为未解决成功", null);
+            } else {
+                return new Response<>(404, "未找到对应的求助请求", null);
+            }
+        } catch (Exception e) {
+            return new Response<>(500, "操作失败: " + e.getMessage(), null);
+        }
+    }
+
 }

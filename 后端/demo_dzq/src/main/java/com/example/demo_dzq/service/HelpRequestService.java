@@ -12,4 +12,9 @@ public interface HelpRequestService {
 
     // 获取当前用户发布的所有求助请求
     List<HelpRequest> getHelpRequestsByUserId(Integer userId);
+
+    boolean markAsResolved(Integer requestId) throws Exception;
+
+    boolean markAsUnresolved(Integer requestId) throws Exception;
+
 }

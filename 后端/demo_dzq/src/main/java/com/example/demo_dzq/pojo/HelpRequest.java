@@ -7,17 +7,18 @@ import java.time.LocalDateTime;
 public class HelpRequest {
 
     private Integer requestId;        // 求助请求 ID
-    private Integer userId;          // 发布者用户 ID
-    private String title;            // 求助标题
-    private LocalDate eventDate;     // 活动日期
-    private Integer duration;        // 活动持续天数
-    private String imageUrl;         // 活动相关图片 URL
-    private String description;      // 任务简介
-    private String phone;            // 联系电话
-    private String contact;          // 其他联系方式（如 QQ/微信）
-    private BigDecimal fee;          // 任务费用
-    private String city;             // 活动所在城市
-    private LocalDateTime createdAt; // 创建时间，默认当前时间
+    private Integer userId;           // 发布者用户 ID
+    private String title;             // 求助标题
+    private LocalDate eventDate;      // 活动日期
+    private Integer duration;         // 活动持续天数
+    private String imageUrl;          // 活动相关图片 URL
+    private String description;       // 任务简介
+    private String phone;             // 联系电话
+    private String contact;           // 其他联系方式（如 QQ/微信）
+    private BigDecimal fee;           // 任务费用
+    private String city;              // 活动所在城市
+    private LocalDateTime createdAt;  // 创建时间，默认当前时间
+    private Boolean isResolved;       // 求助是否解决
 
     // Getter 和 Setter
     public Integer getRequestId() {
@@ -116,8 +117,17 @@ public class HelpRequest {
         this.createdAt = createdAt;
     }
 
+    public Boolean getIsResolved() {
+        return isResolved;
+    }
+
+    public void setIsResolved(Boolean isResolved) {
+        this.isResolved = isResolved;
+    }
+
     // 默认构造函数
     public HelpRequest() {
+        this.isResolved = false; // 默认未解决
     }
 
     // 带参构造函数
@@ -133,6 +143,7 @@ public class HelpRequest {
         this.contact = contact;
         this.fee = fee;
         this.city = city;
-        this.createdAt = LocalDateTime.now();  // 默认设置为当前时间
+        this.createdAt = LocalDateTime.now(); // 默认设置为当前时间
+        this.isResolved = false; // 默认未解决
     }
 }

@@ -32,5 +32,17 @@ public class HelpRequestServiceImpl implements HelpRequestService {
         // 调用 Mapper 获取该用户发布的所有求助请求
         return helpRequestMapper.selectHelpRequestsByUserId(userId);
     }
+
+    @Override
+    public boolean markAsResolved(Integer requestId) throws Exception {
+        int updatedRows = helpRequestMapper.markAsResolved(requestId);
+        return updatedRows > 0; // 返回是否更新成功
+    }
+
+    @Override
+    public boolean markAsUnresolved(Integer requestId) throws Exception {
+        int updatedRows = helpRequestMapper.markAsUnresolved(requestId);
+        return updatedRows > 0; // 返回是否更新成功
+    }
 }
 
